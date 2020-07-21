@@ -1,0 +1,308 @@
+package com.example.titagarh;
+
+
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.models.SlideModel;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+    ImageView btim1,imgadmn;
+    private AdView mAdView;
+
+    RecyclerView mRecyclerView;
+    List<FoodData> myFoodList;
+    FoodData mFoodData;
+
+    private DatabaseReference databaseReference;
+    private ValueEventListener eventListener;
+    ProgressDialog progressDialog;
+    MyAdapter myAdapter;
+    EditText txt_Search;
+    private String emailtest;
+    private long backPressedTime;
+    String gents1,ladies1,shoe,mobile,bag,jewel,gift,food,sunglas,watch,discount,repair,furniture,electric,jobs,old;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        emailtest="fakeid";
+        gents1="gents";
+        ladies1="ladies";
+        shoe="shoe";
+        mobile="mobile";
+        bag="bag";
+        jewel="jewel";
+        gift="gift";
+        food="food";
+        sunglas="sunglas";
+        watch="watch";
+        discount="discount";
+        repair="repair";
+        furniture="furn";
+        electric="electr";
+        jobs="job";
+        old="old";
+
+
+        // Transperent Action Bar
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        );
+        getSupportActionBar().hide();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Images");
+
+        ImageSlider imageSlider=findViewById(R.id.slider);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.i("My info:",String.valueOf(dataSnapshot.getValue()));
+//-------------------------------------------------------------------------------------not working
+		        List<SlideModel> slideModels=new ArrayList<>();
+		        slideModels.add(new SlideModel("Image1"));
+		        slideModels.add(new SlideModel("Image2"));
+		        slideModels.add(new SlideModel("Image3"));
+		        slideModels.add(new SlideModel("Image4"));
+		        slideModels.add(new SlideModel("Image5"));
+		        imageSlider.setImageList(slideModels, true);
+//-------------------------------------------------------------------------------------not working
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        ImageSlider imageSlider1=findViewById(R.id.slider1);
+        List<SlideModel> slideModels1=new ArrayList<>();
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/aa/8a/8c/ME124GP5_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/b4/f0/0e/ME124GP6_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/06/16/ae/ME124GP7_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/70/ac/70/ME124GP3_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/fb/92/82/ME124GP4_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/70/ac/70/ME124GP3_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/fb/92/82/ME124GP4_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/aa/8a/8c/ME124GP5_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/b4/f0/0e/ME124GP6_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/06/16/ae/ME124GP7_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/70/ac/70/ME124GP3_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/fb/92/82/ME124GP4_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/aa/8a/8c/ME124GP5_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/b4/f0/0e/ME124GP6_t.png"));
+        slideModels1.add(new SlideModel("http://cdn-thumbs.imagevenue.com/06/16/ae/ME124GP7_t.png"));
+        imageSlider1.setImageList(slideModels1, true);
+
+        btim1=findViewById(R.id.btnimg1);
+        imgadmn=findViewById(R.id.img_admin);
+        btim1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "You are going to Signin", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this , SigninAcitvity.class);
+                startActivity(intent);
+
+            }
+        });
+        imgadmn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Contact Admin : 9330934621", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //-------------------------------------------------GOOGLE ADD
+        MobileAds.initialize(this,"ca-app-pub-3079208423681095~2718562563");
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        //--------------------------------------------------------------------------------------
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(MainActivity.this,1);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+
+        txt_Search = (EditText) findViewById(R.id.txt_searchtext);
+
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Products...");
+
+        myFoodList = new ArrayList<>();
+
+        //final MyAdapter myAdapter = new MyAdapter(MainActivity.this,myFoodList);
+        myAdapter = new MyAdapter(MainActivity.this,myFoodList);
+        mRecyclerView.setAdapter(myAdapter);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("ProDescription");
+        progressDialog.show();
+        eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                myFoodList.clear();
+
+                for (DataSnapshot itemSnapshot: dataSnapshot.getChildren()){
+                    FoodData foodData =itemSnapshot.getValue(FoodData.class);
+                    foodData.setKey(itemSnapshot.getKey());
+                    myFoodList.add(foodData);
+                }
+
+                myAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, "Cancelled by User Product Loading Failed",
+                        Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+
+        txt_Search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                filter(s.toString());
+
+            }
+        });
+
+
+    }
+    //---------------------------on Start
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    private void filter(String text) {
+        ArrayList<FoodData> filterList = new ArrayList<>();
+        for (FoodData item:myFoodList){
+            if (item.getItemDescription().toLowerCase().contains(text.toLowerCase())){
+                filterList.add(item);
+            }
+        }
+        myAdapter.filteredList(filterList);
+
+    }
+
+    public void btn_gents(View view) {
+        txt_Search.setText(gents1);
+    }
+
+    public void btn_ladies(View view) {
+        txt_Search.setText(ladies1);
+    }
+
+    public void btn_old(View view) {
+        txt_Search.setText(old);
+    }
+    public void btn_jobs(View view) {
+        txt_Search.setText(jobs);
+    }
+
+
+    public void btn_shoe(View view) {
+        txt_Search.setText(shoe);
+    }
+
+    public void btn_mobile(View view) {
+        txt_Search.setText(mobile);
+    }
+
+    public void btn_bags(View view) {
+        txt_Search.setText(bag);
+    }
+
+    public void btn_jewel(View view) {
+        txt_Search.setText(jewel);
+    }
+
+    public void btn_gift(View view) {
+        txt_Search.setText(gift);
+    }
+
+    public void btn_food(View view) {
+        txt_Search.setText(food);
+    }
+
+    public void btn_sunglas(View view) {
+        txt_Search.setText(sunglas);
+    }
+
+    public void btn_watch(View view) {
+        txt_Search.setText(watch);
+    }
+    public void btn_discount (View view) {
+        txt_Search.setText(discount);
+    }
+    public void btn_repair (View view) {
+        txt_Search.setText(repair);
+    }
+    public void btn_electric (View view) {
+        txt_Search.setText(electric);
+    }
+    public void btn_furniture (View view) {
+        txt_Search.setText(furniture);
+    }
+    public void btn_home(View view) {
+        txt_Search.setText(" ");
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            return;
+        } else {
+            Toast.makeText(this, "Press back again to Exit", Toast.LENGTH_SHORT).show();
+        }
+        backPressedTime=System.currentTimeMillis();
+    }
+}
